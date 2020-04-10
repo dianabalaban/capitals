@@ -1,10 +1,6 @@
 
-let i=0, count=0;
-// function skipCountry(e){
-//     console.log('skip');
-//     i++;
-//     gameStart();
-// }
+let i = 0, count = 0, missedCountries = [];
+
 async function getData() {
     let url = 'https://restcountries.eu/rest/v2/all';
     let data = await fetch(url)
@@ -35,59 +31,79 @@ async function getData() {
             }
             return b;
         }
-        
+
         random(allCountries);
-
         function gameStart() {
-            let country = allCountries[i].name.normalize('NFD').replace(/[\u0300-\u036f]/g, "")
-            let capital = allCountries[i].capital.normalize('NFD').replace(/[\u0300-\u036f]/g, "")
-            let writtenCapital = document.getElementsByClassName('capital')[0];
-            let input = document.querySelector('input');
-            input.addEventListener("keyup", updateValue);
-         
-            function updateValue(e) {
+            if (i == allCountries.length) {
+                console.log(missedCountries)
+                document.getElementsByClassName('country')[0].innerText = 'You missed the following: ';
 
-                let pattern = new RegExp("^.{" + e.target.value.length + "}", "g");
-                let newValue = writtenCapital.textContent.replace(pattern, e.target.value);
-                writtenCapital.textContent = newValue;
-                let charactersRemaining;
+            } else {
+                let country = allCountries[i].name.normalize('NFD').replace(/[\u0300-\u036f]/g, "")
+                let capital = allCountries[i].capital.normalize('NFD').replace(/[\u0300-\u036f]/g, "")
+                let writtenCapital = document.getElementsByClassName('capital')[0];
+                let input = document.querySelector('input');
+                input.addEventListener("keyup", updateValue);
 
-                if (e.target.value.length < writtenCapital.textContent.length) {
-                    charactersRemaining = writtenCapital.textContent.length - e.target.value.length;
-                    writtenCapital.textContent = e.target.value + '_'.repeat(charactersRemaining)
+                function updateValue(e) {
+
+                    let pattern = new RegExp("^.{" + e.target.value.length + "}", "g");
+                    let newValue = writtenCapital.textContent.replace(pattern, e.target.value);
+                    writtenCapital.textContent = newValue;
+                    let charactersRemaining;
+
+                    if (e.target.value.length < writtenCapital.textContent.length) {
+                        charactersRemaining = writtenCapital.textContent.length - e.target.value.length;
+                        writtenCapital.textContent = e.target.value + '_'.repeat(charactersRemaining)
+                    }
+
+                    if (capital.toLowerCase() === e.target.value.toLowerCase()) {
+                        i++;
+                        console.log('SUNT EGALE')
+                        count++;
+                        e.target.value = '';
+                        buttonData.removeEventListener("click", skipCountry, true);
+                        gameStart();
+                    }
+
                 }
-                
-                if (capital.toLowerCase() === e.target.value.toLowerCase()) {
+
+                document.getElementsByClassName('country')[0].textContent = country;
+
+                document.getElementsByClassName('score')[0].textContent = 'Correct: ' + count + '/' + allCountries.length;
+                let hiddenCapital = capital.replace(/[A-Za-z]/g, "_");
+                document.getElementsByClassName('capital')[0].textContent = hiddenCapital;
+                //console.log(capital);
+                function skipCountry() {
+                    console.log(country)
+                    missedCountries.push({ country: country, capital: capital })
                     i++;
-                    count++;
-                    e.target.value = ''
+                    buttonData.removeEventListener("click", skipCountry, true);
                     gameStart();
-                }
 
+                }
+                let buttonData = document.querySelector('button');
+                buttonData.addEventListener("click", skipCountry, true);
             }
-            
-            document.getElementsByClassName('country')[0].textContent = country;
- 
-            document.getElementsByClassName('score')[0].textContent='Correct: '+ count + '/' + allCountries.length;
-            let hiddenCapital = capital.replace(/[A-Za-z]/g, "_");
-            document.getElementsByClassName('capital')[0].textContent = hiddenCapital;
-            console.log(capital);
 
         }
         gameStart()
-        let timeout = new Date().getTime() + 3*60*1000; //add 3 minutes;
-        let timeLeft = setInterval(function() {
-            
-            var now =new Date().getTime();
-            distance = timeout-now;
+        let timeout = new Date().getTime() + 0.3 * 60 * 1000; //add 3 minutes;
+        let timeLeft = setInterval(function () {
+
+            var now = new Date().getTime();
+            distance = timeout - now;
             let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             let seconds = Math.floor((distance % (1000 * 60)) / 1000);
-            document.getElementsByClassName('score')[0].textContent= minutes + "m " + seconds + "s " + 'Correct: '+ count + '/' + allCountries.length;
+            document.getElementsByClassName('score')[0].textContent = minutes + "m " + seconds + "s " + 'Correct: ' + count + '/' + allCountries.length;
             if (distance < 0) {
-              clearInterval(x);
-              document.getElementById("demo").innerHTML = "EXPIRED";
+                i = allCountries.length;
+                gameStart();
+                clearInterval(timeLeft);
+                document.getElementsByClassName('score')[0].textContent = 'Correct: ' + count + '/' + allCountries.length;
+                console.log('time up')
             }
-          }, 1000);
+        }, 1000);
     }
 }
 

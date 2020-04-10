@@ -1,7 +1,7 @@
 .wrapper {
     /* border:1px solid black; */
     width: 98%;
-    height:100vh;
+   padding-top:2em;
     text-align: center;
     display:flex;
     flex-direction:column;
@@ -9,19 +9,26 @@
 }
 .score{
     font-size:2em;
+    padding-top:2em;
 }
 .capital {
-    letter-spacing:0.8em;
+    letter-spacing:0.7em;
     font-weight: 600;
-    font-size:2em;
+    font-size:1.8em;
+    padding-top:2em;
 }
 .country{
     font-weight:400;
     font-size:2.2em;
+    padding-top:2em;
+}
+.skipButton {
+    margin-top:1em;
 }
 input{
     width:100%;
     border:none;
     font-size:2em;
     border-bottom:1px solid black;
+    margin-top:2em;
 }
