@@ -1,0 +1,25 @@
+.wrapper {
+    /* border:1px solid black; */
+    width: 98%;
+    height:100vh;
+    text-align: center;
+    display:flex;
+    flex-direction:column;
+    justify-content: space-around;
+}
+.score{
+    font-size:2em;
+}
+.capital {
+    letter-spacing:0.8em;
+    font-weight: 600;
+    font-size:2em;
+}
+.country{
+    font-weight:400;
+    font-size:2.2em;
+}
+input{
+    width:100%;
+    border:none;
+}
