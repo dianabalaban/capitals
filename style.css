@@ -5,7 +5,7 @@
     text-align: center;
     display:flex;
     flex-direction:column;
-    justify-content: space-around;
+    justify-content: space-between;
 }
 .score{
     font-size:2em;
@@ -22,4 +22,6 @@
 input{
     width:100%;
     border:none;
+    font-size:2em;
+    border-bottom:1px solid black;
 }

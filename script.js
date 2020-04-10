@@ -1,3 +1,10 @@
+
+let i=0, count=0;
+// function skipCountry(e){
+//     console.log('skip');
+//     i++;
+//     gameStart();
+// }
 async function getData() {
     let url = 'https://restcountries.eu/rest/v2/all';
     let data = await fetch(url)
@@ -28,18 +35,16 @@ async function getData() {
             }
             return b;
         }
-
+        
         random(allCountries);
-        let i = 0;
-        let count=0;
 
         function gameStart() {
-            let country = allCountries[i].name;
-            let capital = allCountries[i].capital;
+            let country = allCountries[i].name.normalize('NFD').replace(/[\u0300-\u036f]/g, "")
+            let capital = allCountries[i].capital.normalize('NFD').replace(/[\u0300-\u036f]/g, "")
             let writtenCapital = document.getElementsByClassName('capital')[0];
             let input = document.querySelector('input');
             input.addEventListener("keyup", updateValue);
-
+         
             function updateValue(e) {
 
                 let pattern = new RegExp("^.{" + e.target.value.length + "}", "g");
@@ -52,8 +57,7 @@ async function getData() {
                     writtenCapital.textContent = e.target.value + '_'.repeat(charactersRemaining)
                 }
                 
-                
-                if (capital.toLowerCase() === e.target.value) {
+                if (capital.toLowerCase() === e.target.value.toLowerCase()) {
                     i++;
                     count++;
                     e.target.value = ''
@@ -61,7 +65,9 @@ async function getData() {
                 }
 
             }
+            
             document.getElementsByClassName('country')[0].textContent = country;
+ 
             document.getElementsByClassName('score')[0].textContent='Correct: '+ count + '/' + allCountries.length;
             let hiddenCapital = capital.replace(/[A-Za-z]/g, "_");
             document.getElementsByClassName('capital')[0].textContent = hiddenCapital;
@@ -69,7 +75,19 @@ async function getData() {
 
         }
         gameStart()
-
+        let timeout = new Date().getTime() + 3*60*1000; //add 3 minutes;
+        let timeLeft = setInterval(function() {
+            
+            var now =new Date().getTime();
+            distance = timeout-now;
+            let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            document.getElementsByClassName('score')[0].textContent= minutes + "m " + seconds + "s " + 'Correct: '+ count + '/' + allCountries.length;
+            if (distance < 0) {
+              clearInterval(x);
+              document.getElementById("demo").innerHTML = "EXPIRED";
+            }
+          }, 1000);
     }
 }
 
