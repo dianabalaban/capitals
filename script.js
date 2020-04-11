@@ -36,8 +36,17 @@ async function getData() {
         function gameStart() {
             if (i == allCountries.length) {
                 console.log(missedCountries)
-                document.getElementsByClassName('country')[0].innerText = 'You missed the following: ';
-
+                document.getElementsByClassName('capital')[0].innerText = 'You missed the following: ';
+                missedCountries.forEach( element => {
+                    document.getElementsByClassName('capital')[0].innerHTML += "<br/>" + element.country+' - '+element.capital;
+                })
+                document.getElementsByClassName('country')[0].innerText = ''
+                document.getElementsByClassName('userInput')[0].innerText = '';
+                document.getElementsByClassName('capital')[0].className+=' missedCountries';
+                if(count <= allCountries.length/2)
+                document.getElementsByClassName('country')[0].className +=' loser'
+                else if (count < allCountries.length/3*2) document.getElementsByClassName('country')[0].className +=' notbad'
+                else document.getElementsByClassName('country')[0].className +=' iznice'
             } else {
                 let country = allCountries[i].name.normalize('NFD').replace(/[\u0300-\u036f]/g, "")
                 let capital = allCountries[i].capital.normalize('NFD').replace(/[\u0300-\u036f]/g, "")
@@ -88,7 +97,7 @@ async function getData() {
 
         }
         gameStart()
-        let timeout = new Date().getTime() + 0.3 * 60 * 1000; //add 3 minutes;
+        let timeout = new Date().getTime() + 3 * 60 * 1000; //add 3 minutes;
         let timeLeft = setInterval(function () {
 
             var now = new Date().getTime();

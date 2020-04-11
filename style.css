@@ -1,34 +1,69 @@
 .wrapper {
     /* border:1px solid black; */
     width: 98%;
-   padding-top:2em;
+    padding-top: 2em;
     text-align: center;
-    display:flex;
-    flex-direction:column;
+    display: flex;
+    flex-direction: column;
     justify-content: space-between;
 }
-.score{
-    font-size:2em;
-    padding-top:2em;
+
+.score {
+    font-size: 2em;
 }
+
 .capital {
-    letter-spacing:0.7em;
+    letter-spacing: 0.7em;
     font-weight: 600;
-    font-size:1.8em;
-    padding-top:2em;
+    font-size: 1.8em;
+    padding-top: 2em;
 }
-.country{
-    font-weight:400;
-    font-size:2.2em;
-    padding-top:2em;
+
+.country {
+    font-weight: 400;
+    font-size: 2.2em;
+    padding-top: 2em;
 }
+
 .skipButton {
-    margin-top:1em;
+    margin-top: 1em;
 }
-input{
-    width:100%;
-    border:none;
-    font-size:2em;
-    border-bottom:1px solid black;
-    margin-top:2em;
+
+input {
+    width: 100%;
+    border: none;
+    font-size: 2em;
+    border-bottom: 1px solid black;
+    margin-top: 2em;
+}
+
+.loser {
+    background-image: url(./images/loser.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 5em;
+    width: 7em;
+    margin: 0 auto;
+}
+
+.notbad {
+    background-image: url(./images/notbad.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 5em;
+    width: 7em;
+    margin: 0 auto;
+}
+
+.iznice {
+    background-image: url(./images/iz-nice.jfif);
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 5em;
+    width: 9em;
+    margin: 0 auto;
+}
+
+.missedCountries {
+    letter-spacing: normal;
 }
