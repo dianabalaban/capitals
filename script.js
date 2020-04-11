@@ -45,7 +45,7 @@ async function getData() {
                 document.getElementsByClassName('capital')[0].className+=' missedCountries';
                 if(count <= allCountries.length/2)
                 document.getElementsByClassName('country')[0].className +=' loser'
-                else if (count < allCountries.length/3*2) document.getElementsByClassName('country')[0].className +=' notbad'
+                else if (count < allCountries.length/10*9) document.getElementsByClassName('country')[0].className +=' notbad'
                 else document.getElementsByClassName('country')[0].className +=' iznice'
             } else {
                 let country = allCountries[i].name.normalize('NFD').replace(/[\u0300-\u036f]/g, "")
