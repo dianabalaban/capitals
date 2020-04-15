@@ -9,13 +9,26 @@
 </head>
 <body>
     <div class="wrapper">
-        <div class="score"></div>
-        <div class="country"></div>
-        <div class="capital"></div>
-        <div class="userInput">
-            <button class='skipButton' >SKIP</button>
-            <input type="text" name="name" autofocus></input>
-        </div>
+        <form method="GET" >
+            <input type="checkbox" id="europe" name="europe">
+            <label for="europe"> Europe</label>
+            <input type="checkbox" id="asia" name="asia" >
+            <label for="asia"> Asia</label>
+            <input type="checkbox" id="africa" name="africa" >
+            <label for="africa"> Africa</label>
+            <input type="checkbox" id="america" name="america" >
+            <label for="america"> America</label>
+            <input type="checkbox" id="oceania" name="oceania" >
+            <label for="oceania"> Oceania</label>
+            <br>
+            <input type="radio" id="time" name="answers" >
+            <label for="time"> With timer</label>
+            <input type="radio" id="answers" name="answers">
+            <label for="answers"> Multiple answers</label>
+            <br>
+            <input type="button" value="Submit" onclick="submitData()" >
+          </form>
+        
     </div>
 </body>
 <script src="./script.js"></script>
