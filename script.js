@@ -8,17 +8,17 @@ async function getData(continents) {
         .then(res => res.json())
         .then(data => data);
     if (data) {
-        
+
         let copy = data;
         let allCountries = [];
         let euroExlcude = ["Åland Islands", "Faroe Islands", "Gibraltar", "Guernsey", "Isle of Man", "Jersey", "Svalbard and Jan Mayen"]
         let asiaExlcude = ["Hong Kong", "Macao", "Timor-Leste"];
-        let africaExlcude = ["British Indian Ocean Territory",  "French Southern Territories",  "Mayotte",  "Réunion", "Saint Helena, Ascension and Tristan da Cunha"];
-        let americasExlcude = ["Anguilla",  "Aruba",  "Bermuda",  "Bonaire, Sint Eustatius and Saba",  "United States Minor Outlying Islands",  "Virgin Islands (British)",  "Virgin Islands (U.S.)",  "Cayman Islands",  "Curaçao",  "Falkland Islands (Malvinas)",  "French Guiana",  "Greenland",  "Guadeloupe",  "Martinique",  "Montserrat",  "Saint Barthélemy",  "Saint Martin (French part)",  "Saint Pierre and Miquelon",  "Sint Maarten (Dutch part)",  "South Georgia and the South Sandwich Islands",  "Turks and Caicos Islands"];
-        let oceaniaExlcude = ["American Samoa",  "Christmas Island",  "Cocos (Keeling) Islands",  "French Polynesia",  "Guam",  "Micronesia (Federated States of)",  "New Caledonia",  "Norfolk Island",  "Northern Mariana Islands",  "Pitcairn",  "Tokelau",  "Wallis and Futuna"];
-        let excludeAll = [...euroExlcude, ...asiaExlcude,...africaExlcude,...americasExlcude,...oceaniaExlcude]
+        let africaExlcude = ["British Indian Ocean Territory", "French Southern Territories", "Mayotte", "Réunion", "Saint Helena, Ascension and Tristan da Cunha"];
+        let americasExlcude = ["Anguilla", "Aruba", "Bermuda", "Bonaire, Sint Eustatius and Saba", "United States Minor Outlying Islands", "Virgin Islands (British)", "Virgin Islands (U.S.)", "Cayman Islands", "Curaçao", "Falkland Islands (Malvinas)", "French Guiana", "Greenland", "Guadeloupe", "Martinique", "Montserrat", "Saint Barthélemy", "Saint Martin (French part)", "Saint Pierre and Miquelon", "Sint Maarten (Dutch part)", "South Georgia and the South Sandwich Islands", "Turks and Caicos Islands"];
+        let oceaniaExlcude = ["American Samoa", "Christmas Island", "Cocos (Keeling) Islands", "French Polynesia", "Guam", "Micronesia (Federated States of)", "New Caledonia", "Norfolk Island", "Northern Mariana Islands", "Pitcairn", "Tokelau", "Wallis and Futuna"];
+        let excludeAll = [...euroExlcude, ...asiaExlcude, ...africaExlcude, ...americasExlcude, ...oceaniaExlcude]
         copy.forEach(element => {
-            if ( continents.includes(element.region) && excludeAll.includes(element.name) == false)
+            if (continents.includes(element.region) && excludeAll.includes(element.name) == false)
                 allCountries.push({ name: element.name, capital: element.capital, region: element.region, subregion: element.subregion })
 
         });
@@ -39,16 +39,16 @@ async function getData(continents) {
             if (i == allCountries.length) {
                 console.log(missedCountries)
                 document.getElementsByClassName('capital')[0].innerText = 'You missed the following: ';
-                missedCountries.forEach( element => {
-                    document.getElementsByClassName('capital')[0].innerHTML += "<br/>" + element.country+' - '+element.capital;
+                missedCountries.forEach(element => {
+                    document.getElementsByClassName('capital')[0].innerHTML += "<br/>" + element.country + ' - ' + element.capital;
                 })
                 document.getElementsByClassName('country')[0].innerText = ''
                 document.getElementsByClassName('userInput')[0].innerText = '';
-                document.getElementsByClassName('capital')[0].className+=' missedCountries';
-                if(count <= allCountries.length/2)
-                document.getElementsByClassName('country')[0].className +=' loser'
-                else if (count < allCountries.length/10*9) document.getElementsByClassName('country')[0].className +=' notbad'
-                else document.getElementsByClassName('country')[0].className +=' iznice'
+                document.getElementsByClassName('capital')[0].className += ' missedCountries';
+                if (count <= allCountries.length / 2)
+                    document.getElementsByClassName('country')[0].className += ' loser'
+                else if (count < allCountries.length / 10 * 9) document.getElementsByClassName('country')[0].className += ' notbad'
+                else document.getElementsByClassName('country')[0].className += ' iznice'
             } else {
                 let country = allCountries[i].name.normalize('NFD').replace(/[\u0300-\u036f]/g, "")
                 let capital = allCountries[i].capital.normalize('NFD').replace(/[\u0300-\u036f]/g, "")
@@ -99,7 +99,8 @@ async function getData(continents) {
 
         }
         gameStart()
-        let timeout = new Date().getTime() + 3 * 60 * 1000; //add 3 minutes;
+        console.log(allCountries.length);
+        let timeout = new Date().getTime() + allCountries.length * 5 * 1000; //add 5 seconds/country
         let timeLeft = setInterval(function () {
 
             let now = new Date().getTime();
@@ -119,34 +120,34 @@ async function getData(continents) {
 }
 
 function submitData() {
-    params='';
-    document.getElementById('europe').checked ? params +="Europe=true&": ''
-    document.getElementById('oceania').checked ? params +="Oceania=true&": ''
-    document.getElementById('america').checked ? params +="Americas=true&": ''
-    document.getElementById('asia').checked ? params +="Asia=true&": ''
-    document.getElementById('africa').checked ? params +="Africa=true&": ''    
-    document.getElementById('time').checked ? window.location.href = "/withTime.html?" + params : window.location.href = "/easy.html?europe&";
-
-
+    params = '';
+    document.getElementById('europe').checked ? params += "Europe=true&" : ''
+    document.getElementById('oceania').checked ? params += "Oceania=true&" : ''
+    document.getElementById('america').checked ? params += "Americas=true&" : ''
+    document.getElementById('asia').checked ? params += "Asia=true&" : ''
+    document.getElementById('africa').checked ? params += "Africa=true&" : ''
+    if (!(document.getElementById('europe').checked || document.getElementById('oceania').checked
+        || document.getElementById('america').checked || document.getElementById('asia').checked
+        || document.getElementById('africa').checked)) window.alert('Select at least one continent')
+    else
+        document.getElementById('time').checked ? window.location.href = "/withTime.html?" + params : window.location.href = "/easy.html?europe&";
 }
+
 function getContinents(location) {
-    let continents=[]
+    let continents = []
     const urlParams = new URLSearchParams(location);
     const Europe = urlParams.get('Europe');
     const Oceania = urlParams.get('Oceania');
     const Africa = urlParams.get('Africa');
     const Americas = urlParams.get('Americas');
     const Asia = urlParams.get('Asia');
-    Europe ? continents.push('Europe'):'';
-    Oceania ? continents.push('Oceania'):'';
-    Africa ? continents.push('Africa'):'';
-    Americas ? continents.push('Americas'):'';
-    Asia ? continents.push('Asia'):'';
+    Europe ? continents.push('Europe') : '';
+    Oceania ? continents.push('Oceania') : '';
+    Africa ? continents.push('Africa') : '';
+    Americas ? continents.push('Americas') : '';
+    Asia ? continents.push('Asia') : '';
     return continents;
 }
- if(location.pathname === "/withTime.html" )  {
-     getData(getContinents(window.location.search));
- } 
-
-
-
+if (location.pathname === "/withTime.html") {
+    getData(getContinents(window.location.search));
+}
