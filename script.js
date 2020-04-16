@@ -130,7 +130,7 @@ function submitData() {
         || document.getElementById('america').checked || document.getElementById('asia').checked
         || document.getElementById('africa').checked)) window.alert('Select at least one continent')
     else
-        document.getElementById('time').checked ? window.location.href = "/withTime.html?" + params : window.location.href = "/easy.html?europe&";
+        document.getElementById('time').checked ? window.location.href = "./withTime.html?" + params : window.location.href = "./easy.html";
 }
 
 function getContinents(location) {
