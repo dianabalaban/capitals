@@ -1,9 +1,7 @@
 
 let i = 0, count = 0, missedCountries = [];
-console.log('HERE')
 async function getData(continents) {
     let url = 'https://restcountries.eu/rest/v2/all';
-    console.log(continents, 'din data fyunct');
     let data = await fetch(url)
         .then(res => res.json())
         .then(data => data);
@@ -37,7 +35,6 @@ async function getData(continents) {
         random(allCountries);
         function gameStart() {
             if (i == allCountries.length) {
-                console.log(missedCountries)
                 document.getElementsByClassName('capital')[0].innerText = 'You missed the following: ';
                 missedCountries.forEach(element => {
                     document.getElementsByClassName('capital')[0].innerHTML += "<br/>" + element.country + ' - ' + element.capital;
@@ -70,7 +67,6 @@ async function getData(continents) {
 
                     if (capital.toLowerCase() === e.target.value.toLowerCase()) {
                         i++;
-                        console.log('SUNT EGALE')
                         count++;
                         e.target.value = '';
                         buttonData.removeEventListener("click", skipCountry, true);
@@ -84,9 +80,7 @@ async function getData(continents) {
                 document.getElementsByClassName('score')[0].textContent = 'Correct: ' + count + '/' + allCountries.length;
                 let hiddenCapital = capital.replace(/[A-Za-z]/g, "_");
                 document.getElementsByClassName('capital')[0].textContent = hiddenCapital;
-                //console.log(capital);
                 function skipCountry() {
-                    console.log(country)
                     missedCountries.push({ country: country, capital: capital })
                     i++;
                     buttonData.removeEventListener("click", skipCountry, true);
@@ -98,8 +92,7 @@ async function getData(continents) {
             }
 
         }
-        gameStart()
-        console.log(allCountries.length);
+        gameStart();
         let timeout = new Date().getTime() + allCountries.length * 5 * 1000; //add 5 seconds/country
         let timeLeft = setInterval(function () {
 
@@ -113,7 +106,6 @@ async function getData(continents) {
                 gameStart();
                 clearInterval(timeLeft);
                 document.getElementsByClassName('score')[0].textContent = 'Correct: ' + count + '/' + allCountries.length;
-                console.log('time up')
             }
         }, 1000);
     }
@@ -135,7 +127,6 @@ function submitData() {
 
 function getContinents(location) {
     let continents = [];
-    console.log('aaaaaaaaaaa')
     const urlParams = new URLSearchParams(location);
     const Europe = urlParams.get('Europe');
     const Oceania = urlParams.get('Oceania');
@@ -150,8 +141,5 @@ function getContinents(location) {
     return continents;
 }
 if (location.pathname.match(/.*withTime.*/)) {
-    
-    console.log('ddddddddd',window.location.search)
-    getData(getContinents(window.location.search));
-   
+    getData(getContinents(window.location.search));   
 }
