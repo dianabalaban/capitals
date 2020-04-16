@@ -1,9 +1,9 @@
 
 let i = 0, count = 0, missedCountries = [];
-
+console.log('HERE')
 async function getData(continents) {
     let url = 'https://restcountries.eu/rest/v2/all';
-    console.log(continents, 'din data fyunct')
+    console.log(continents, 'din data fyunct');
     let data = await fetch(url)
         .then(res => res.json())
         .then(data => data);
@@ -134,7 +134,8 @@ function submitData() {
 }
 
 function getContinents(location) {
-    let continents = []
+    let continents = [];
+    console.log('aaaaaaaaaaa')
     const urlParams = new URLSearchParams(location);
     const Europe = urlParams.get('Europe');
     const Oceania = urlParams.get('Oceania');
@@ -149,5 +150,7 @@ function getContinents(location) {
     return continents;
 }
 if (location.pathname === "/withTime.html") {
+    console.log('ddddddddd',window.location.search)
     getData(getContinents(window.location.search));
+   
 }
