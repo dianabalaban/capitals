@@ -149,7 +149,8 @@ function getContinents(location) {
     Asia ? continents.push('Asia') : '';
     return continents;
 }
-if (location.pathname === "/withTime.html") {
+if (location.pathname.match(/.*withTime.*/)) {
+    
     console.log('ddddddddd',window.location.search)
     getData(getContinents(window.location.search));
    
