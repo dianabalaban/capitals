@@ -1,5 +1,5 @@
 
-let i = 0, count = 0, missedCountries = [];
+let i = 0, count = 0, missedCountries = [], skippedCount = 0, distance = 0;
 async function getData(continents) {
     let url = 'https://restcountries.eu/rest/v2/all';
     let data = await fetch(url)
@@ -33,38 +33,54 @@ async function getData(continents) {
         }
 
         random(allCountries);
+        let countriesNo = allCountries.lenght;
         function gameStart() {
-            if (i == allCountries.length) {
-                document.getElementsByClassName('capital')[0].innerText = 'You missed the following: ';
-                missedCountries.forEach(element => {
-                    document.getElementsByClassName('capital')[0].innerHTML += "<br/>" + element.country + ' - ' + element.capital;
-                })
+            if (i === allCountries.length || distance < 0) {
+
+                let removeDuplicates = [...allCountries.slice(i - skippedCount)];
+                let set = new Set(removeDuplicates);
+                removeDuplicates = Array.from(set);
+                removeDuplicates.length !== 0 ?
+                    document.getElementsByClassName('capital')[0].innerText = 'You missed or skipped the following: ' : '';
+
+                for (let k = 0; k <= removeDuplicates.length - 1; k++) {
+                    document.getElementsByClassName('capital')[0].innerHTML += "<br/>" + removeDuplicates[k].name + ' - ' + removeDuplicates[k].capital;
+                }
+
                 document.getElementsByClassName('country')[0].innerText = ''
                 document.getElementsByClassName('userInput')[0].innerText = '';
                 document.getElementsByClassName('capital')[0].className += ' missedCountries';
-                if (count <= allCountries.length / 2)
+
+                if (count <= (allCountries.length - skippedCount) / 2)
                     document.getElementsByClassName('country')[0].className += ' loser'
-                else if (count < allCountries.length / 10 * 9) document.getElementsByClassName('country')[0].className += ' notbad'
-                else document.getElementsByClassName('country')[0].className += ' iznice'
+                else if (count < (allCountries.length - skippedCount) / 10 * 9)
+                    document.getElementsByClassName('country')[0].className += ' notbad'
+                else
+                    document.getElementsByClassName('country')[0].className += ' iznice'
             } else {
-                let country = allCountries[i].name.normalize('NFD').replace(/[\u0300-\u036f]/g, "")
-                let capital = allCountries[i].capital.normalize('NFD').replace(/[\u0300-\u036f]/g, "")
+                document.getElementsByClassName('score')[0].textContent = 'Correct: ' + count + '/' + (allCountries.length - skippedCount);
+                let country = allCountries[i].name.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+                let capital = allCountries[i].capital.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+                document.getElementsByClassName('country')[0].textContent = country;
+                let hiddenCapital = capital.replace(/[A-Za-z]/g, "_");
                 let writtenCapital = document.getElementsByClassName('capital')[0];
+                writtenCapital.textContent = hiddenCapital;
+
                 let input = document.querySelector('input');
+                input.addEventListener("keydown", updateValue);
                 input.addEventListener("keyup", updateValue);
 
                 function updateValue(e) {
-
                     let pattern = new RegExp("^.{" + e.target.value.length + "}", "g");
+                    console.log(e.key)
                     let newValue = writtenCapital.textContent.replace(pattern, e.target.value);
                     writtenCapital.textContent = newValue;
-                    let charactersRemaining;
+                    console.log('keydown', newValue)
+                    console.log('written', writtenCapital.textContent);
 
-                    if (e.target.value.length < writtenCapital.textContent.length) {
-                        charactersRemaining = writtenCapital.textContent.length - e.target.value.length;
-                        writtenCapital.textContent = e.target.value + '_'.repeat(charactersRemaining)
-                    }
-
+                    let charactersRemaining = writtenCapital.textContent.length - e.target.value.length;
+                    let slicedWord = hiddenCapital.slice(e.target.value.length, capital.length);
+                    writtenCapital.textContent = e.target.value + slicedWord;
                     if (capital.toLowerCase() === e.target.value.toLowerCase()) {
                         i++;
                         count++;
@@ -75,17 +91,13 @@ async function getData(continents) {
 
                 }
 
-                document.getElementsByClassName('country')[0].textContent = country;
-
-                document.getElementsByClassName('score')[0].textContent = 'Correct: ' + count + '/' + allCountries.length;
-                let hiddenCapital = capital.replace(/[A-Za-z]/g, "_");
-                document.getElementsByClassName('capital')[0].textContent = hiddenCapital;
-                function skipCountry() {
-                    missedCountries.push({ country: country, capital: capital })
+                function skipCountry(e) {
+                    document.querySelector('input').value = ''
+                    allCountries.push(allCountries[i]);
+                    skippedCount++;
                     i++;
                     buttonData.removeEventListener("click", skipCountry, true);
                     gameStart();
-
                 }
                 let buttonData = document.querySelector('button');
                 buttonData.addEventListener("click", skipCountry, true);
@@ -93,19 +105,19 @@ async function getData(continents) {
 
         }
         gameStart();
-        let timeout = new Date().getTime() + allCountries.length * 5 * 1000; //add 5 seconds/country
+        let timeout = new Date().getTime() + allCountries.length * 5 * 1000;
         let timeLeft = setInterval(function () {
 
             let now = new Date().getTime();
             distance = timeout - now;
             let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             let seconds = Math.floor((distance % (1000 * 60)) / 1000);
-            document.getElementsByClassName('score')[0].textContent = minutes + "m " + seconds + "s " + 'Correct: ' + count + '/' + allCountries.length;
+            ;
+            document.getElementsByClassName('score')[0].textContent = minutes + "m " + seconds + "s " + 'Correct: ' + count + '/' + (allCountries.length - skippedCount);
             if (distance < 0) {
-                i = allCountries.length;
                 gameStart();
                 clearInterval(timeLeft);
-                document.getElementsByClassName('score')[0].textContent = 'Correct: ' + count + '/' + allCountries.length;
+                document.getElementsByClassName('score')[0].textContent = 'Correct: ' + count + '/' + (allCountries.length - skippedCount);
             }
         }, 1000);
     }
@@ -141,5 +153,5 @@ function getContinents(location) {
     return continents;
 }
 if (location.pathname.match(/.*withTime.*/)) {
-    getData(getContinents(window.location.search));   
+    getData(getContinents(window.location.search));
 }
