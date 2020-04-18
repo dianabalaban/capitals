@@ -72,13 +72,10 @@ async function getData(continents) {
 
                 function updateValue(e) {
                     let pattern = new RegExp("^.{" + e.target.value.length + "}", "g");
-                    console.log(e.key)
                     let newValue = writtenCapital.textContent.replace(pattern, e.target.value);
                     writtenCapital.textContent = newValue;
-                    console.log('keydown', newValue)
-                    console.log('written', writtenCapital.textContent);
 
-                    let charactersRemaining = writtenCapital.textContent.length - e.target.value.length;
+                   // let charactersRemaining = writtenCapital.textContent.length - e.target.value.length;
                     let slicedWord = hiddenCapital.slice(e.target.value.length, capital.length);
                     writtenCapital.textContent = e.target.value + slicedWord;
                     if (capital.toLowerCase() === e.target.value.toLowerCase()) {
@@ -112,7 +109,6 @@ async function getData(continents) {
             distance = timeout - now;
             let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             let seconds = Math.floor((distance % (1000 * 60)) / 1000);
-            ;
             document.getElementsByClassName('score')[0].textContent = minutes + "m " + seconds + "s " + 'Correct: ' + count + '/' + (allCountries.length - skippedCount);
             if (distance < 0) {
                 gameStart();
@@ -140,16 +136,11 @@ function submitData() {
 function getContinents(location) {
     let continents = [];
     const urlParams = new URLSearchParams(location);
-    const Europe = urlParams.get('Europe');
-    const Oceania = urlParams.get('Oceania');
-    const Africa = urlParams.get('Africa');
-    const Americas = urlParams.get('Americas');
-    const Asia = urlParams.get('Asia');
-    Europe ? continents.push('Europe') : '';
-    Oceania ? continents.push('Oceania') : '';
-    Africa ? continents.push('Africa') : '';
-    Americas ? continents.push('Americas') : '';
-    Asia ? continents.push('Asia') : '';
+    urlParams.get('Europe') ? continents.push('Europe') : '';
+    urlParams.get('Oceania') ? continents.push('Oceania') : '';
+    urlParams.get('Africa') ? continents.push('Africa') : '';
+    urlParams.get('Americas') ? continents.push('Americas') : '';
+    urlParams.get('Asia') ? continents.push('Asia') : '';
     return continents;
 }
 if (location.pathname.match(/.*withTime.*/)) {
