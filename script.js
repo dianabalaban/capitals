@@ -1,5 +1,16 @@
 
-let i = 0, count = 0, missedCountries = [], skippedCount = 0, distance = 0;
+let i = 0, count = 0, missedCountries = [], skippedCount = 0, distance = 0, capital;
+
+function random(b) {
+    let a, pos;
+    for (let i = b.length - 1; i > 0; i--) {
+        pos = Math.floor(Math.random() * (i + 1));
+        a = b[i];
+        b[i] = b[pos];
+        b[pos] = a;
+    }
+    return b;
+}
 async function getData(continents) {
     let url = 'https://restcountries.eu/rest/v2/all';
     let data = await fetch(url)
@@ -21,16 +32,6 @@ async function getData(continents) {
 
         });
 
-        function random(b) {
-            let a, pos;
-            for (let i = b.length - 1; i > 0; i--) {
-                pos = Math.floor(Math.random() * (i + 1));
-                a = b[i];
-                b[i] = b[pos];
-                b[pos] = a;
-            }
-            return b;
-        }
 
         random(allCountries);
         let countriesNo = allCountries.lenght;
@@ -75,7 +76,7 @@ async function getData(continents) {
                     let newValue = writtenCapital.textContent.replace(pattern, e.target.value);
                     writtenCapital.textContent = newValue;
 
-                   // let charactersRemaining = writtenCapital.textContent.length - e.target.value.length;
+                    // let charactersRemaining = writtenCapital.textContent.length - e.target.value.length;
                     let slicedWord = hiddenCapital.slice(e.target.value.length, capital.length);
                     writtenCapital.textContent = e.target.value + slicedWord;
                     if (capital.toLowerCase() === e.target.value.toLowerCase()) {
@@ -119,6 +120,87 @@ async function getData(continents) {
     }
 }
 
+async function displayData(continents) {
+    let url = 'https://restcountries.eu/rest/v2/all';
+    let data = await fetch(url)
+        .then(res => res.json())
+        .then(data => data);
+    if (data) {
+
+        let copy = data;
+        let allCountries = [];
+        let euroExlcude = ["Åland Islands", "Faroe Islands", "Gibraltar", "Guernsey", "Isle of Man", "Jersey", "Svalbard and Jan Mayen"]
+        let asiaExlcude = ["Hong Kong", "Macao", "Timor-Leste"];
+        let africaExlcude = ["British Indian Ocean Territory", "French Southern Territories", "Mayotte", "Réunion", "Saint Helena, Ascension and Tristan da Cunha"];
+        let americasExlcude = ["Anguilla", "Aruba", "Bermuda", "Bonaire, Sint Eustatius and Saba", "United States Minor Outlying Islands", "Virgin Islands (British)", "Virgin Islands (U.S.)", "Cayman Islands", "Curaçao", "Falkland Islands (Malvinas)", "French Guiana", "Greenland", "Guadeloupe", "Martinique", "Montserrat", "Saint Barthélemy", "Saint Martin (French part)", "Saint Pierre and Miquelon", "Sint Maarten (Dutch part)", "South Georgia and the South Sandwich Islands", "Turks and Caicos Islands"];
+        let oceaniaExlcude = ["American Samoa", "Christmas Island", "Cocos (Keeling) Islands", "French Polynesia", "Guam", "Micronesia (Federated States of)", "New Caledonia", "Norfolk Island", "Northern Mariana Islands", "Pitcairn", "Tokelau", "Wallis and Futuna"];
+        let excludeAll = [...euroExlcude, ...asiaExlcude, ...africaExlcude, ...americasExlcude, ...oceaniaExlcude]
+        copy.forEach(element => {
+            if (continents.includes(element.region) && excludeAll.includes(element.name) == false)
+                allCountries.push({ name: element.name, capital: element.capital, region: element.region, subregion: element.subregion })
+
+        });
+
+        random(allCountries);
+        let shuffle = [...allCountries];
+        function gameStart() {
+            if (i === allCountries.length) {
+
+                document.getElementsByClassName('country')[0].innerText = ''
+                document.getElementsByClassName('optionsWrapper')[0].innerText = '';
+                // document.getElementsByClassName('capital')[0].className += ' missedCountries';
+
+                if (count <= (allCountries.length) / 2)
+                    document.getElementsByClassName('country')[0].className += ' loser'
+                else if (count < (allCountries.length) / 10 * 9)
+                    document.getElementsByClassName('country')[0].className += ' notbad'
+                else
+                    document.getElementsByClassName('country')[0].className += ' iznice'
+            } else {
+                document.getElementsByClassName('score')[0].textContent = 'Correct: ' + count + '/' + (allCountries.length);
+                let country = allCountries[i].name;
+                capital = allCountries[i].capital;
+                document.getElementsByClassName('country')[0].textContent = country;
+                let randomOptions = random(shuffle);
+                let otherOptions = [];
+                otherOptions.push(randomOptions[0].capital);
+                otherOptions.push(randomOptions[1].capital);
+                otherOptions.push(randomOptions[2].capital);
+                otherOptions.includes(capital) ? otherOptions.push(randomOptions[3].capital) : otherOptions.push(capital);
+                random(otherOptions);
+                for (il = 0; il <= 3; il++) {
+                    document.querySelectorAll('.options')[il].innerText = otherOptions[il];
+                    document.querySelectorAll('.options')[il].value = otherOptions[il];
+                    document.getElementsByClassName('options')[il].className = 'options'
+                }
+                document.getElementsByClassName("options")[0].onclick = function (e) { selectedValue(e) };
+                document.getElementsByClassName("options")[1].onclick = function (e) { selectedValue(e) };
+                document.getElementsByClassName("options")[2].onclick = function (e) { selectedValue(e) };
+                document.getElementsByClassName("options")[3].onclick = function (e) { selectedValue(e) };
+
+                function selectedValue(e) {
+                    i++;
+                    if (capital === e.target.value) {
+                        count++;
+                        gameStart()
+                    } else {
+                        for (f = 0; f <= 3; f++) {
+                            if (document.getElementsByClassName('options')[f].innerText === capital) {
+                                console.log('find')
+                                document.getElementsByClassName('options')[f].className += ' correct';
+                            }
+                        }
+                        setTimeout(function () { gameStart() }, 2000);
+                    }
+                }
+            }
+        }
+        gameStart()
+
+    }
+
+}
+
 function submitData() {
     params = '';
     document.getElementById('europe').checked ? params += "Europe=true&" : ''
@@ -130,7 +212,7 @@ function submitData() {
         || document.getElementById('america').checked || document.getElementById('asia').checked
         || document.getElementById('africa').checked)) window.alert('Select at least one continent')
     else
-        document.getElementById('time').checked ? window.location.href = "./withTime.html?" + params : window.location.href = "./easy.html";
+        document.getElementById('time').checked ? window.location.href = "./withTime.html?" + params : window.location.href = "./easy.html?" + params;
 }
 
 function getContinents(location) {
@@ -145,4 +227,6 @@ function getContinents(location) {
 }
 if (location.pathname.match(/.*withTime.*/)) {
     getData(getContinents(window.location.search));
+} else if (location.pathname.match(/.*easy*/)) {
+    displayData(getContinents(window.location.search))
 }
