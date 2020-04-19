@@ -47,7 +47,7 @@ async function getData(continents) {
                 for (let k = 0; k <= removeDuplicates.length - 1; k++) {
                     document.getElementsByClassName('capital')[0].innerHTML += "<br/>" + removeDuplicates[k].name + ' - ' + removeDuplicates[k].capital;
                 }
-
+                document.getElementsByClassName('score')[0].textContent = 'Correct: ' + count + '/' + (allCountries.length - skippedCount);
                 document.getElementsByClassName('country')[0].innerText = ''
                 document.getElementsByClassName('userInput')[0].innerText = '';
                 document.getElementsByClassName('capital')[0].className += ' missedCountries';
@@ -145,11 +145,11 @@ async function displayData(continents) {
         let shuffle = [...allCountries];
         function gameStart() {
             if (i === allCountries.length) {
-
+                // console.log('aici se termina',i,count);
                 document.getElementsByClassName('country')[0].innerText = ''
                 document.getElementsByClassName('optionsWrapper')[0].innerText = '';
                 // document.getElementsByClassName('capital')[0].className += ' missedCountries';
-
+                document.getElementsByClassName('score')[0].textContent = 'Correct: ' + count + '/' + (allCountries.length);
                 if (count <= (allCountries.length) / 2)
                     document.getElementsByClassName('country')[0].className += ' loser'
                 else if (count < (allCountries.length) / 10 * 9)
@@ -157,6 +157,8 @@ async function displayData(continents) {
                 else
                     document.getElementsByClassName('country')[0].className += ' iznice'
             } else {
+                //console.log(allCountries.length);
+                // console.log('i este ',i, ' si count e ', count);
                 document.getElementsByClassName('score')[0].textContent = 'Correct: ' + count + '/' + (allCountries.length);
                 let country = allCountries[i].name;
                 capital = allCountries[i].capital;
@@ -186,7 +188,6 @@ async function displayData(continents) {
                     } else {
                         for (f = 0; f <= 3; f++) {
                             if (document.getElementsByClassName('options')[f].innerText === capital) {
-                                console.log('find')
                                 document.getElementsByClassName('options')[f].className += ' correct';
                             }
                         }
