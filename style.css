@@ -1,6 +1,7 @@
 .wrapper {
     /* border:1px solid black; */
     width: 98%;
+    height: 93vh;
     padding-top: 2em;
     text-align: center;
     display: flex;
@@ -28,7 +29,9 @@
 .skipButton {
     margin-top: 1em;
 }
-
+form {
+    display:block;
+}
 .input {
     width: 100%;
     border: none;
@@ -83,4 +86,54 @@
 
 .correct {
     background-color:green;
+}
+
+.europe:before {
+    content: url(./images/europeb1.png);
+}
+
+:checked + .europe::before {
+    content: url(./images/europea1.png);
+}
+
+ .asia:before {
+    content: url(./images/asiab.png);
+  
+}
+
+:checked + .asia::before {
+    content: url(./images/asiaa.png);
+   
+}
+
+.africa:before {
+    content: url(./images/africab.png);
+}
+
+:checked + .africa::before {
+    content: url(./images/africaa.png);
+} 
+
+.oceania:before {
+    content: url(./images/australiab.png);
+}
+
+:checked + .oceania::before {
+    content: url(./images/australiaa.png);
+} 
+
+.americas:before {
+    content: url(./images/americasb1.png);
+}
+
+:checked + .americas::before {
+    content: url(./images/americasa1.png);
+} 
+
+
+input[type=checkbox] {
+    display: none;
+  }
+.icons {
+    position: 0 absolute;
 }
